@@ -1,14 +1,44 @@
-# MDConvert
+# 📄 MarkItDown MCP Server
 
-A powerful CLI tool that converts 29+ file formats to Markdown using Microsoft's MarkItDown library. 
+[![MCP](https://img.shields.io/badge/Model_Context_Protocol-MCP-blue)](https://modelcontextprotocol.io)
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-**Perfect for:**
-- 📄 Document processing workflows
-- 🤖 Preparing content for LLMs
-- 📚 Converting legacy documents to Markdown
-- 🔄 Batch processing entire directories
+A powerful **Model Context Protocol (MCP) server** that converts 29+ file formats to clean, structured Markdown using Microsoft's MarkItDown library.
 
-Transform documents, images, audio, and more into clean, structured Markdown with OCR, speech recognition, and intelligent formatting.
+🔥 **Perfect for Claude Desktop, MCP clients, and AI workflows!** 
+
+## ✨ Features
+
+- 🔌 **MCP Protocol**: Seamless integration with Claude Desktop and MCP clients
+- 📁 **29+ File Formats**: PDFs, Office docs, images, audio, archives, and more
+- 🔍 **OCR Support**: Extract text from images (JPG, PNG, GIF, BMP, TIFF, WebP)
+- 🎵 **Speech Recognition**: Convert audio to text (MP3, WAV, FLAC, M4A, OGG, WMA)
+- 📊 **Office Documents**: Word, PowerPoint, Excel files
+- 🌐 **Web Content**: HTML, XML, JSON, CSV
+- 📚 **E-books & Archives**: EPUB, ZIP files
+- ⚡ **Fast & Reliable**: Built on Microsoft's MarkItDown library
+
+## 🚀 Quick Start for Claude Desktop
+
+1. **Install the server:**
+   ```bash
+   pip install -e git+https://github.com/trsdn/markitdown-mcp.git
+   ```
+
+2. **Add to your Claude Desktop config:**
+   ```json
+   {
+     "mcpServers": {
+       "markitdown": {
+         "command": "markitdown-mcp",
+         "args": []
+       }
+     }
+   }
+   ```
+
+3. **Restart Claude Desktop** and start converting files!
 
 ## Features
 
@@ -17,79 +47,136 @@ Transform documents, images, audio, and more into clean, structured Markdown wit
 - Preserves directory structure in output
 - Environment variable support via .env file
 
-## Supported File Formats
+## 📋 Available MCP Tools
 
-**Office Documents:**
-- PDF files (.pdf)
-- Word documents (.docx)
-- PowerPoint presentations (.pptx)
-- Excel spreadsheets (.xlsx, .xls)
+### 🔧 `convert_file`
+Convert a single file to Markdown.
+```json
+{
+  "name": "convert_file",
+  "arguments": {
+    "file_path": "/path/to/document.pdf"
+  }
+}
+```
 
-**Web and Markup:**
-- HTML files (.html, .htm)
+### 📋 `list_supported_formats`
+Get a complete list of supported file formats.
+```json
+{
+  "name": "list_supported_formats",
+  "arguments": {}
+}
+```
 
-**Data Formats:**
-- CSV files (.csv)
-- JSON files (.json)
-- XML files (.xml)
+### 📁 `convert_directory`
+Convert all supported files in a directory.
+```json
+{
+  "name": "convert_directory", 
+  "arguments": {
+    "input_directory": "/path/to/files",
+    "output_directory": "/path/to/markdown" 
+  }
+}
+```
 
-**Archives:**
-- ZIP files (.zip)
+## 📄 Supported File Formats (29+)
 
-**E-books:**
-- EPUB files (.epub)
-
-**Images:**
-- JPEG (.jpg, .jpeg)
-- PNG (.png)
-- GIF (.gif)
-- BMP (.bmp)
-- TIFF (.tiff, .tif)
-- WebP (.webp)
-
-**Audio:**
-- MP3 (.mp3)
-- WAV (.wav)
-- FLAC (.flac)
-- M4A (.m4a)
-- OGG (.ogg)
-- WMA (.wma)
-
-**Text Files:**
-- Plain text (.txt)
-- Markdown (.md)
-- reStructuredText (.rst)
+| Category | Extensions | Features |
+|----------|------------|----------|
+| **📊 Office** | `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.xls` | Full document structure |
+| **🖼️ Images** | `.jpg`, `.png`, `.gif`, `.bmp`, `.tiff`, `.webp` | OCR text extraction |
+| **🎵 Audio** | `.mp3`, `.wav`, `.flac`, `.m4a`, `.ogg`, `.wma` | Speech-to-text |
+| **🌐 Web** | `.html`, `.htm`, `.xml`, `.json`, `.csv` | Clean formatting |
+| **📚 Books** | `.epub` | Chapter extraction |
+| **📦 Archives** | `.zip` | Auto-extract and process |
+| **📝 Text** | `.txt`, `.md`, `.rst` | Direct conversion |
 
 ## Installation
 
-1. Clone this repository:
+### Option 1: Pip Install (Recommended)
+
 ```bash
-git clone <repository-url>
-cd mdconvert
+# Install from local directory
+pip install -e /Users/torstenmahr/GitHub/markitdown-mcp
+
+# Or navigate to the directory first
+cd /Users/torstenmahr/GitHub/markitdown-mcp
+pip install -e .
 ```
 
-2. Create a virtual environment:
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+### Option 2: Direct Usage
 
-3. Install dependencies:
 ```bash
+cd /Users/torstenmahr/GitHub/markitdown-mcp
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
 ## Quick Start
 
+### MCP Server Mode (Recommended)
+
+After pip installation:
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Start the MCP server (for use with MCP clients)
+markitdown-mcp
+```
 
-# Convert a single file
-python mdconvert.py --file document.pdf
+Or using the development script:
+```bash
+python run_server.py
+```
 
-# Convert all files in a directory
-python mdconvert.py --input ./docs --output ./markdown
+## 🛠️ Installation Options
+
+### For Claude Desktop Users (Recommended)
+```bash
+pip install -e git+https://github.com/trsdn/markitdown-mcp.git
+```
+
+### For Development
+```bash
+git clone https://github.com/trsdn/markitdown-mcp.git
+cd markitdown-mcp
+pip install -e .
+```
+
+## 🔧 Claude Desktop Configuration
+
+Add this to your Claude Desktop `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "markitdown": {
+      "command": "markitdown-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+**Config file locations:**
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+## 💡 Usage Examples
+
+### Convert a PDF
+```
+Convert the file ~/Documents/report.pdf to markdown
+```
+
+### Batch Process Directory
+```
+Convert all files in ~/Downloads/documents/ to markdown
+```
+
+### Check Supported Formats
+```
+What file formats can you convert to markdown?
 ```
 
 ## Configuration
@@ -125,28 +212,70 @@ python mdconvert.py --file document.pdf
 - `--output, -o`: Output directory (default: `output`)
 - `--file, -f`: Convert a single file instead of a directory
 
+## MCP Server Features
+
+The MCP server provides three tools:
+
+### 1. convert_file
+Convert a single file to Markdown.
+- **Input**: File path or base64 encoded content with filename
+- **Output**: Converted Markdown content
+
+### 2. list_supported_formats
+List all supported file formats.
+- **Output**: Categorized list of supported file extensions
+
+### 3. convert_directory
+Convert all supported files in a directory.
+- **Input**: Input directory path, optional output directory
+- **Output**: Summary of conversion results
+
 ## Directory Structure
 
 ```
-mdconvert/
-├── mdconvert.py         # Main CLI script
+markitdown-mcp/
+├── mcp_server.py        # MCP protocol server
+├── mdconvert.py         # CLI script
+├── run_server.py        # Server runner script
+├── mcp_config.json      # MCP configuration
 ├── requirements.txt     # Python dependencies
 ├── README.md           # This file
 ├── input/              # Default input directory
-└── output/             # Default output directory
+├── output/             # Default output directory
+└── venv/               # Virtual environment
 ```
 
-## Requirements
+## 🔍 How It Works
 
-- Python 3.8+
-- See `requirements.txt` for Python package dependencies
+This MCP server leverages Microsoft's MarkItDown library to provide intelligent document conversion:
 
+- **📄 PDFs**: Extracts text, tables, and structure
+- **🖼️ Images**: Uses OCR to extract text content  
+- **🎵 Audio**: Converts speech to text transcription
+- **📊 Office**: Preserves formatting from Word, Excel, PowerPoint
+- **🌐 HTML**: Converts to clean, readable Markdown
+- **📦 Archives**: Automatically extracts and processes contents
 
-## Notes
+## 🏷️ Tags
 
-- The tool preserves the directory structure when converting files
-- Output files are saved with the `.md` extension
-- Images are processed with OCR and caption generation
-- Audio files are processed with speech recognition
-- ZIP files are extracted and their contents processed
-- Some formats may require additional dependencies (automatically handled by MarkItDown)
+`mcp` `model-context-protocol` `claude-desktop` `markdown` `document-conversion` `pdf` `ocr` `speech-to-text` `markitdown` `ai-tools`
+
+## 📋 Requirements
+
+- **Python**: 3.8+
+- **MCP Client**: Claude Desktop or compatible MCP client
+- **Dependencies**: Automatically installed via pip
+
+## 🤝 Contributing
+
+Contributions welcome! Please feel free to submit issues and pull requests.
+
+## 📄 License
+
+MIT License - see LICENSE file for details.
+
+## 🔗 Related
+
+- [Model Context Protocol](https://modelcontextprotocol.io)
+- [Claude Desktop](https://claude.ai/desktop)  
+- [Microsoft MarkItDown](https://github.com/microsoft/markitdown)

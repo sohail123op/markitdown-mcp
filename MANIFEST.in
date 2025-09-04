@@ -1,0 +1,7 @@
+include README.md
+include requirements.txt
+include mcp_config.json
+recursive-include markitdown_mcp *.py
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude .DS_Store
