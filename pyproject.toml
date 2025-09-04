@@ -28,7 +28,7 @@ classifiers = [
 keywords = ["mcp", "markitdown", "markdown", "document-conversion", "model-context-protocol"]
 
 dependencies = [
-    "markitdown>=0.0.1a2",
+    "markitdown>=0.1.0",
     "pypdf>=3.17.0",
     "python-pptx>=0.6.21",
     "pillow>=10.0.0",
