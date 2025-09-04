@@ -1,7 +1,7 @@
 # 📄 MarkItDown MCP Server
 
 [![MCP](https://img.shields.io/badge/Model_Context_Protocol-MCP-blue)](https://modelcontextprotocol.io)
-[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![CI](https://github.com/trsdn/markitdown-mcp-server/workflows/CI/badge.svg)](https://github.com/trsdn/markitdown-mcp-server/actions)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
@@ -264,7 +264,7 @@ This MCP server leverages Microsoft's MarkItDown library to provide intelligent 
 
 ## 📋 Requirements
 
-- **Python**: 3.8+
+- **Python**: 3.10+
 - **MCP Client**: Claude Desktop or compatible MCP client
 - **Dependencies**: Automatically installed via pip
 
