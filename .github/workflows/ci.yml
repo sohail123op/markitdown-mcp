@@ -59,16 +59,16 @@ jobs:
             if stdout:
                 response = json.loads(stdout.strip())
                 if 'result' in response:
-                    print('✅ MCP server working correctly')
+                    print('SUCCESS: MCP server working correctly')
                     sys.exit(0)
             
-            print('❌ MCP server test failed')
+            print('FAILED: MCP server test failed')
             print('STDOUT:', stdout)
             print('STDERR:', stderr)
             sys.exit(1)
             
         except Exception as e:
-            print(f'❌ Test failed: {e}')
+            print(f'FAILED: Test failed: {e}')
             sys.exit(1)
         "
 
@@ -103,18 +103,18 @@ jobs:
                 actual_tools = {tool['name'] for tool in tools}
                 
                 if expected_tools.issubset(actual_tools):
-                    print(f'✅ All {len(expected_tools)} MCP tools available')
+                    print(f'SUCCESS: All {len(expected_tools)} MCP tools available')
                     sys.exit(0)
                     
-                print(f'❌ Missing tools. Expected: {expected_tools}, Got: {actual_tools}')
+                print(f'FAILED: Missing tools. Expected: {expected_tools}, Got: {actual_tools}')
             else:
-                print('❌ No response from tools/list')
+                print('FAILED: No response from tools/list')
                 print('STDERR:', stderr)
             
             sys.exit(1)
             
         except Exception as e:
-            print(f'❌ Tools test failed: {e}')
+            print(f'FAILED: Tools test failed: {e}')
             sys.exit(1)
         "
 
@@ -136,4 +136,4 @@ jobs:
     - name: Test package installation
       run: |
         pip install dist/*.whl
-        which markitdown-mcp && echo "✅ Console script installed" || echo "❌ Console script missing"
+        which markitdown-mcp && echo "SUCCESS: Console script installed" || echo "FAILED: Console script missing"
