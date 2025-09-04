@@ -3,7 +3,7 @@
 [![MCP](https://img.shields.io/badge/Model_Context_Protocol-MCP-blue)](https://modelcontextprotocol.io)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![CI](https://github.com/trsdn/markitdown-mcp/workflows/CI/badge.svg)](https://github.com/trsdn/markitdown-mcp/actions)
+[![CI](https://github.com/trsdn/markitdown-mcp-server-server/workflows/CI/badge.svg)](https://github.com/trsdn/markitdown-mcp-server-server/actions)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
 
 A powerful **Model Context Protocol (MCP) server** that converts 29+ file formats to clean, structured Markdown using Microsoft's MarkItDown library.
@@ -25,7 +25,7 @@ A powerful **Model Context Protocol (MCP) server** that converts 29+ file format
 
 1. **Install the server:**
    ```bash
-   pip install -e git+https://github.com/trsdn/markitdown-mcp.git
+   pip install -e git+https://github.com/trsdn/markitdown-mcp-server-server.git
    ```
 
 2. **Add to your Claude Desktop config:**
@@ -135,12 +135,12 @@ python run_server.py
 
 ### For Claude Desktop Users (Recommended)
 ```bash
-pip install -e git+https://github.com/trsdn/markitdown-mcp.git
+pip install -e git+https://github.com/trsdn/markitdown-mcp-server-server.git
 ```
 
 ### For Development
 ```bash
-git clone https://github.com/trsdn/markitdown-mcp.git
+git clone https://github.com/trsdn/markitdown-mcp-server.git
 cd markitdown-mcp
 pip install -e .
 ```
@@ -288,8 +288,8 @@ markitdown-mcp  # Test the server works
 ```
 
 ### 📝 Ways to Contribute
-- 🐛 **Bug Reports**: Found an issue? [Report it](https://github.com/trsdn/markitdown-mcp/issues/new?template=bug_report.yml)
-- 💡 **Feature Requests**: Have an idea? [Suggest it](https://github.com/trsdn/markitdown-mcp/issues/new?template=feature_request.yml)  
+- 🐛 **Bug Reports**: Found an issue? [Report it](https://github.com/trsdn/markitdown-mcp-server/issues/new?template=bug_report.yml)
+- 💡 **Feature Requests**: Have an idea? [Suggest it](https://github.com/trsdn/markitdown-mcp-server/issues/new?template=feature_request.yml)  
 - 📄 **New File Formats**: Add support for more file types
 - 📚 **Documentation**: Improve guides and examples
 - 🧪 **Testing**: Add tests and improve reliability
@@ -297,7 +297,7 @@ markitdown-mcp  # Test the server works
 
 ### 📋 Contribution Process
 1. Read our [Contributing Guide](CONTRIBUTING.md)
-2. Check [existing issues](https://github.com/trsdn/markitdown-mcp/issues)
+2. Check [existing issues](https://github.com/trsdn/markitdown-mcp-server/issues)
 3. Fork the repository
 4. Create a feature branch (`feat/amazing-feature`)
 5. Make your changes with tests

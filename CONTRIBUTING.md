@@ -26,8 +26,8 @@ This project adheres to a code of conduct that we expect all contributors to fol
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/markitdown-mcp.git
-   cd markitdown-mcp
+   git clone https://github.com/YOUR_USERNAME/markitdown-mcp-server.git
+   cd markitdown-mcp-server
    ```
 
 ## 💻 Development Setup
@@ -50,7 +50,7 @@ This project adheres to a code of conduct that we expect all contributors to fol
 
 4. **Verify installation:**
    ```bash
-   markitdown-mcp --help
+   markitdown-mcp-server --help
    ```
 
 ## 🔧 Making Changes
@@ -83,7 +83,7 @@ Example: `feat/add-new-file-format` or `fix/mcp-protocol-error`
    import json
    import subprocess
    test_request = {'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list', 'params': {}}
-   proc = subprocess.run(['markitdown-mcp'], input=json.dumps(test_request), 
+   proc = subprocess.run(['markitdown-mcp-server'], input=json.dumps(test_request), 
                         capture_output=True, text=True)
    print('✅ Server working' if proc.stdout else '❌ Server error')
    "
