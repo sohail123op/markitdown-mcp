@@ -3,7 +3,7 @@
 [![MCP](https://img.shields.io/badge/Model_Context_Protocol-MCP-blue)](https://modelcontextprotocol.io)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![CI](https://github.com/trsdn/markitdown-mcp-server/workflows/CI/badge.svg)](https://github.com/trsdn/markitdown-mcp-server/actions)
+[![CI](https://github.com/trsdn/markitdown-mcp/workflows/CI/badge.svg)](https://github.com/trsdn/markitdown-mcp/actions)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
 
 A powerful **Model Context Protocol (MCP) server** that converts 29+ file formats to clean, structured Markdown using Microsoft's MarkItDown library.
