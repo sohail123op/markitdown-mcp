@@ -47,9 +47,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/trsdn/markitdown-mcp-server"
-Repository = "https://github.com/trsdn/markitdown-mcp-server"
-Issues = "https://github.com/trsdn/markitdown-mcp-server/issues"
+Homepage = "https://github.com/trsdn/markitdown-mcp"
+Repository = "https://github.com/trsdn/markitdown-mcp"
+Issues = "https://github.com/trsdn/markitdown-mcp/issues"
 
 [project.scripts]
 markitdown-mcp = "markitdown_mcp.server:main"
