@@ -1,0 +1,91 @@
+name: 🐛 Bug Report
+description: Report a bug in the MarkItDown MCP Server
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! 🐛
+        
+        Please fill out the information below to help us understand and reproduce the issue.
+
+  - type: checkboxes
+    attributes:
+      label: Pre-flight Checklist
+      description: Please ensure you've completed these steps before submitting the issue.
+      options:
+        - label: I have searched the existing issues to make sure this bug hasn't been reported already
+          required: true
+        - label: I have read the [Contributing Guide](../CONTRIBUTING.md)
+          required: true
+        - label: I am using the latest version of the package
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Environment Information
+      description: Please provide information about your environment
+      value: |
+        - **OS**: [e.g., macOS 13.0, Windows 11, Ubuntu 20.04]
+        - **Python version**: [e.g., 3.9.7]
+        - **Package version**: [e.g., 1.0.0]
+        - **MCP Client**: [e.g., Claude Desktop 0.4.1]
+        - **Installation method**: [pip, git clone, etc.]
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the behavior
+      placeholder: |
+        1. Install package with '...'
+        2. Run command '...'
+        3. Try to convert file '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Actual Behavior
+      description: A clear and concise description of what actually happened
+      placeholder: What actually happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Error Output
+      description: If applicable, add the full error output
+      render: bash
+      placeholder: Paste error messages here...
+
+  - type: textarea
+    attributes:
+      label: Sample Files
+      description: If the bug is related to specific file types, please describe or attach sample files (remove sensitive data)
+      placeholder: Describe the type of files that cause the issue...
+
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: Any additional information that might help...

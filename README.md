@@ -3,6 +3,8 @@
 [![MCP](https://img.shields.io/badge/Model_Context_Protocol-MCP-blue)](https://modelcontextprotocol.io)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/trsdn/markitdown-mcp/workflows/CI/badge.svg)](https://github.com/trsdn/markitdown-mcp/actions)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
 
 A powerful **Model Context Protocol (MCP) server** that converts 29+ file formats to clean, structured Markdown using Microsoft's MarkItDown library.
 
@@ -268,7 +270,40 @@ This MCP server leverages Microsoft's MarkItDown library to provide intelligent 
 
 ## 🤝 Contributing
 
-Contributions welcome! Please feel free to submit issues and pull requests.
+We welcome contributions! Here's how you can help:
+
+### 🚀 Quick Start for Contributors
+```bash
+# Fork and clone the repository
+git clone https://github.com/YOUR_USERNAME/markitdown-mcp.git
+cd markitdown-mcp
+
+# Set up development environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -e ".[dev]"
+
+# Test your changes
+markitdown-mcp  # Test the server works
+```
+
+### 📝 Ways to Contribute
+- 🐛 **Bug Reports**: Found an issue? [Report it](https://github.com/trsdn/markitdown-mcp/issues/new?template=bug_report.yml)
+- 💡 **Feature Requests**: Have an idea? [Suggest it](https://github.com/trsdn/markitdown-mcp/issues/new?template=feature_request.yml)  
+- 📄 **New File Formats**: Add support for more file types
+- 📚 **Documentation**: Improve guides and examples
+- 🧪 **Testing**: Add tests and improve reliability
+- 🎨 **Code Quality**: Refactor and optimize
+
+### 📋 Contribution Process
+1. Read our [Contributing Guide](CONTRIBUTING.md)
+2. Check [existing issues](https://github.com/trsdn/markitdown-mcp/issues)
+3. Fork the repository
+4. Create a feature branch (`feat/amazing-feature`)
+5. Make your changes with tests
+6. Submit a pull request
+
+**Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.**
 
 ## 📄 License
 
