@@ -14,8 +14,8 @@ A powerful **Model Context Protocol (MCP) server** that converts 29+ file format
 
 - 🔌 **MCP Protocol**: Seamless integration with Claude Desktop and MCP clients
 - 📁 **29+ File Formats**: PDFs, Office docs, images, audio, archives, and more
-- 🔍 **OCR Support**: Extract text from images (JPG, PNG, GIF, BMP, TIFF, WebP)
-- 🎵 **Speech Recognition**: Convert audio to text (MP3, WAV, FLAC, M4A, OGG, WMA)
+- 🔍 **OCR Support**: Extract text from images with EXIF metadata and OCR
+- 🎵 **Speech Recognition**: Convert audio to text with speech transcription (MP3, WAV)
 - 📊 **Office Documents**: Word, PowerPoint, Excel files
 - 🌐 **Web Content**: HTML, XML, JSON, CSV
 - 📚 **E-books & Archives**: EPUB, ZIP files
@@ -88,8 +88,8 @@ Convert all supported files in a directory.
 | Category | Extensions | Features |
 |----------|------------|----------|
 | **📊 Office** | `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.xls` | Full document structure |
-| **🖼️ Images** | `.jpg`, `.png`, `.gif`, `.bmp`, `.tiff`, `.webp` | OCR text extraction |
-| **🎵 Audio** | `.mp3`, `.wav`, `.flac`, `.m4a`, `.ogg`, `.wma` | Speech-to-text |
+| **🖼️ Images** | `.jpg`, `.png`, `.gif`, `.bmp`, `.tiff`, `.webp` | OCR text extraction + EXIF metadata |
+| **🎵 Audio** | `.mp3`, `.wav` | Speech-to-text transcription |
 | **🌐 Web** | `.html`, `.htm`, `.xml`, `.json`, `.csv` | Clean formatting |
 | **📚 Books** | `.epub` | Chapter extraction |
 | **📦 Archives** | `.zip` | Auto-extract and process |
@@ -252,8 +252,8 @@ markitdown-mcp/
 This MCP server leverages Microsoft's MarkItDown library to provide intelligent document conversion:
 
 - **📄 PDFs**: Extracts text, tables, and structure
-- **🖼️ Images**: Uses OCR to extract text content  
-- **🎵 Audio**: Converts speech to text transcription
+- **🖼️ Images**: Uses OCR to extract text content + EXIF metadata  
+- **🎵 Audio**: Converts speech to text transcription (MP3, WAV)
 - **📊 Office**: Preserves formatting from Word, Excel, PowerPoint
 - **🌐 HTML**: Converts to clean, readable Markdown
 - **📦 Archives**: Automatically extracts and processes contents
