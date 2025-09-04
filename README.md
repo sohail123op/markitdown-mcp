@@ -14,8 +14,10 @@ A powerful **Model Context Protocol (MCP) server** that converts 29+ file format
 
 - 🔌 **MCP Protocol**: Seamless integration with Claude Desktop and MCP clients
 - 📁 **29+ File Formats**: PDFs, Office docs, images, audio, archives, and more
-- 🔍 **OCR Support**: Extract text from images with EXIF metadata and OCR
-- 🎵 **Speech Recognition**: Convert audio to text with speech transcription (MP3, WAV)
+- 🔍 **OCR Support**: Extract text from images with EXIF metadata and OCR*
+- 🎵 **Speech Recognition**: Convert audio to text with speech transcription (MP3, WAV)*
+
+*_Requires `markitdown[all]` installation for full functionality_
 - 📊 **Office Documents**: Word, PowerPoint, Excel files
 - 🌐 **Web Content**: HTML, XML, JSON, CSV
 - 📚 **E-books & Archives**: EPUB, ZIP files
@@ -25,7 +27,7 @@ A powerful **Model Context Protocol (MCP) server** that converts 29+ file format
 
 1. **Install the server:**
    ```bash
-   pip install -e git+https://github.com/trsdn/markitdown-mcp-server.git
+   pip install -e git+https://github.com/trsdn/markitdown-mcp.git
    ```
 
 2. **Add to your Claude Desktop config:**
@@ -135,7 +137,16 @@ python run_server.py
 
 ### For Claude Desktop Users (Recommended)
 ```bash
-pip install -e git+https://github.com/trsdn/markitdown-mcp-server.git
+pip install -e git+https://github.com/trsdn/markitdown-mcp.git
+```
+
+**For Full OCR and Speech Recognition:**
+```bash
+# Clone and install with enhanced features
+git clone https://github.com/trsdn/markitdown-mcp.git
+cd markitdown-mcp
+pip install -e . 
+pip install 'markitdown[all]'  # Enables OCR and speech recognition
 ```
 
 ### For Development
