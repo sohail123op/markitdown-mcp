@@ -18,6 +18,19 @@ A powerful **Model Context Protocol (MCP) server** that converts 29+ file format
 - 🎵 **Speech Recognition**: Convert audio to text with speech transcription (MP3, WAV)*
 
 *_Requires `markitdown[all]` installation for full functionality_
+
+### 📦 Dependency Requirements by File Type
+
+| File Type | Required Dependencies | Install Command |
+|-----------|----------------------|-----------------|
+| **PDF** | `pypdf`, `pymupdf`, `pdfplumber` | `pipx inject markitdown-mcp 'markitdown[all]'` |
+| **Excel (.xlsx, .xls)** | `openpyxl`, `xlrd`, `pandas` | `pipx inject markitdown-mcp openpyxl xlrd pandas` |
+| **PowerPoint (.pptx)** | `python-pptx` | Included in base install |
+| **Images with OCR** | `pytesseract`, `PIL` | `pipx inject markitdown-mcp 'markitdown[all]'` |
+| **Audio** | `pydub`, `speech_recognition` | `pipx inject markitdown-mcp 'markitdown[all]'` |
+| **Basic formats** | None | Base install only |
+
+**Note**: For the best experience, we recommend installing all dependencies using the **Complete Install** method below.
 - 📊 **Office Documents**: Word, PowerPoint, Excel files
 - 🌐 **Web Content**: HTML, XML, JSON, CSV
 - 📚 **E-books & Archives**: EPUB, ZIP files
@@ -135,25 +148,57 @@ python run_server.py
 
 ## 🛠️ Installation Options
 
-### For Claude Desktop Users (Recommended)
+### Quick Install (Basic Features Only)
 ```bash
 pip install -e git+https://github.com/trsdn/markitdown-mcp.git
 ```
 
-**For Full OCR and Speech Recognition:**
+### Complete Install with All Dependencies (Recommended)
+
+To ensure all file formats are supported, use one of these methods:
+
+#### Method 1: Using pipx (Recommended)
 ```bash
-# Clone and install with enhanced features
-git clone https://github.com/trsdn/markitdown-mcp.git
-cd markitdown-mcp
-pip install -e . 
-pip install 'markitdown[all]'  # Enables OCR and speech recognition
+# Install the MCP server
+pipx install git+https://github.com/trsdn/markitdown-mcp.git
+
+# Install all required dependencies for full functionality
+pipx inject markitdown-mcp 'markitdown[all]'         # PDF, OCR, Speech
+pipx inject markitdown-mcp openpyxl xlrd pandas      # Excel support
+pipx inject markitdown-mcp pymupdf pdfplumber        # Advanced PDF
 ```
 
-### For Development
+#### Method 2: Using pip with virtual environment
 ```bash
+# Create and activate virtual environment
+python -m venv markitdown-env
+source markitdown-env/bin/activate  # On Windows: markitdown-env\Scripts\activate
+
+# Install with all dependencies
 git clone https://github.com/trsdn/markitdown-mcp.git
 cd markitdown-mcp
 pip install -e .
+pip install 'markitdown[all]' openpyxl xlrd pandas pymupdf pdfplumber
+```
+
+#### Method 3: For Claude Desktop with existing installation
+If you already have the MCP server installed but some formats aren't working:
+```bash
+# Find your installation
+which markitdown-mcp  # Shows path like /Users/you/.local/bin/markitdown-mcp
+
+# Inject missing dependencies
+pipx inject markitdown-mcp 'markitdown[all]' openpyxl xlrd pandas pymupdf pdfplumber
+```
+
+### Verify Installation
+After installation, verify all dependencies are properly installed:
+```bash
+# Test the MCP server
+markitdown-mcp --help
+
+# For pipx installations, check injected packages
+pipx list --include-injected
 ```
 
 ## 🔧 Claude Desktop Configuration
@@ -191,6 +236,26 @@ Convert all files in ~/Downloads/documents/ to markdown
 ```
 What file formats can you convert to markdown?
 ```
+
+## 🔍 Troubleshooting
+
+### Missing Dependencies Errors
+If you see errors like:
+- `PdfConverter threw MissingDependencyException`
+- `XlsxConverter threw MissingDependencyException`
+- `PptxConverter threw BadZipFile`
+
+This means some optional dependencies are missing. Follow the **Complete Install** instructions above.
+
+### Unicode Errors with .md Files
+Some Markdown files with special characters may fail with `UnicodeDecodeError`. This is a known limitation in the MarkItDown library.
+
+### Installation Issues
+- **"externally-managed-environment" error**: Use pipx instead of pip
+- **Permission denied**: Never use sudo with pip; use pipx or virtual environments
+- **Command not found**: Make sure `~/.local/bin` is in your PATH
+
+See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for more details.
 
 ## Configuration
 
