@@ -38,9 +38,11 @@ A powerful **Model Context Protocol (MCP) server** that converts 29+ file format
 
 ## 🚀 Quick Start for Claude Desktop
 
-1. **Install the server:**
+1. **Install the server with ALL features:**
    ```bash
-   pip install -e git+https://github.com/trsdn/markitdown-mcp.git
+   # One command to install everything
+   pipx install git+https://github.com/trsdn/markitdown-mcp.git && \
+   pipx inject markitdown-mcp 'markitdown[all]' openpyxl xlrd pandas pymupdf pdfplumber
    ```
 
 2. **Add to your Claude Desktop config:**
@@ -148,12 +150,23 @@ python run_server.py
 
 ## 🛠️ Installation Options
 
+### 🚀 One-Command Install (Recommended)
+Install with ALL dependencies in one command:
+```bash
+# Using pipx (recommended)
+pipx install git+https://github.com/trsdn/markitdown-mcp.git && \
+pipx inject markitdown-mcp 'markitdown[all]' openpyxl xlrd pandas pymupdf pdfplumber pytesseract pydub speechrecognition
+
+# Or download and run the install script
+curl -sSL https://raw.githubusercontent.com/trsdn/markitdown-mcp/main/install-all-deps.sh | bash
+```
+
 ### Quick Install (Basic Features Only)
 ```bash
 pip install -e git+https://github.com/trsdn/markitdown-mcp.git
 ```
 
-### Complete Install with All Dependencies (Recommended)
+### Complete Install with All Dependencies (Step by Step)
 
 To ensure all file formats are supported, use one of these methods:
 
@@ -174,11 +187,10 @@ pipx inject markitdown-mcp pymupdf pdfplumber        # Advanced PDF
 python -m venv markitdown-env
 source markitdown-env/bin/activate  # On Windows: markitdown-env\Scripts\activate
 
-# Install with all dependencies
+# Install with all dependencies in one command
 git clone https://github.com/trsdn/markitdown-mcp.git
 cd markitdown-mcp
-pip install -e .
-pip install 'markitdown[all]' openpyxl xlrd pandas pymupdf pdfplumber
+pip install -e ".[all]"  # This installs everything!
 ```
 
 #### Method 3: For Claude Desktop with existing installation
