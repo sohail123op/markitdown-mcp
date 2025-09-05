@@ -1,0 +1,10 @@
+Sample Document
+
+This represents the content of a Word document.
+
+Features:
+- Bold text
+- Italic text
+- Lists and tables
+
+Conclusion: This document demonstrates various formatting options.

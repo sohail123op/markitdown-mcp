@@ -1,0 +1,481 @@
+"""
+Example integration test file - MCP Server Full Integration Tests
+
+This file shows what comprehensive integration testing would look like.
+This is NOT the actual implementation, just a blueprint for development.
+"""
+
+import pytest
+import asyncio
+import json
+import tempfile
+import shutil
+from pathlib import Path
+from unittest.mock import AsyncMock, Mock
+import time
+
+# These would be actual imports once implemented
+# from markitdown_mcp.server import MarkItDownMCPServer
+# from tests.helpers.mcp_client import MockMCPClient
+# from tests.helpers.file_utils import create_test_files
+
+
+class TestMCPServerIntegration:
+    """Integration tests for the complete MCP server"""
+    
+    @pytest.fixture
+    async def mcp_server(self):
+        """Create and start an MCP server instance"""
+        # server = MarkItDownMCPServer()
+        # await server.start()
+        # yield server
+        # await server.stop()
+        pass
+    
+    @pytest.fixture
+    def test_files_directory(self):
+        """Create a temporary directory with various test files"""
+        temp_dir = tempfile.mkdtemp()
+        
+        # Create sample files of different formats
+        test_files = {
+            'simple.txt': "Hello, World!",
+            'data.json': '{"name": "test", "value": 123}',
+            'table.csv': "Name,Age,City\nJohn,25,NYC\nJane,30,LA",
+            # Would create more complex files in real implementation
+        }
+        
+        for filename, content in test_files.items():
+            file_path = Path(temp_dir) / filename
+            file_path.write_text(content)
+            
+        yield temp_dir
+        shutil.rmtree(temp_dir)
+    
+    @pytest.mark.integration
+    async def test_server_lifecycle(self, mcp_server):
+        """Test complete server lifecycle"""
+        # Test initialization
+        init_request = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {}
+        }
+        
+        response = await mcp_server.handle_request_json(json.dumps(init_request))
+        response_data = json.loads(response)
+        
+        assert response_data["id"] == 1
+        assert "result" in response_data
+        assert response_data["result"]["protocolVersion"] == "2024-11-05"
+        assert "capabilities" in response_data["result"]
+        
+    @pytest.mark.integration 
+    async def test_tools_list_integration(self, mcp_server):
+        """Test tools/list endpoint integration"""
+        request = {
+            "jsonrpc": "2.0", 
+            "id": 2,
+            "method": "tools/list",
+            "params": {}
+        }
+        
+        response = await mcp_server.handle_request_json(json.dumps(request))
+        response_data = json.loads(response)
+        
+        assert response_data["id"] == 2
+        assert "result" in response_data
+        assert "tools" in response_data["result"]
+        
+        tools = response_data["result"]["tools"]
+        tool_names = [tool["name"] for tool in tools]
+        
+        expected_tools = ["convert_file", "list_supported_formats", "convert_directory"]
+        for expected_tool in expected_tools:
+            assert expected_tool in tool_names
+            
+        # Verify tool schemas
+        for tool in tools:
+            assert "name" in tool
+            assert "description" in tool
+            assert "inputSchema" in tool
+            
+    @pytest.mark.integration
+    async def test_end_to_end_file_conversion(self, mcp_server, test_files_directory):
+        """Test complete end-to-end file conversion workflow"""
+        test_file = Path(test_files_directory) / "simple.txt"
+        
+        # Step 1: Call convert_file tool
+        request = {
+            "jsonrpc": "2.0",
+            "id": 3, 
+            "method": "tools/call",
+            "params": {
+                "name": "convert_file",
+                "arguments": {
+                    "file_path": str(test_file)
+                }
+            }
+        }
+        
+        response = await mcp_server.handle_request_json(json.dumps(request))
+        response_data = json.loads(response)
+        
+        assert response_data["id"] == 3
+        assert "result" in response_data
+        assert "content" in response_data["result"]
+        assert len(response_data["result"]["content"]) > 0
+        
+        content = response_data["result"]["content"][0]
+        assert content["type"] == "text"
+        assert "Hello, World!" in content["text"]
+        
+    @pytest.mark.integration
+    async def test_directory_conversion_integration(self, mcp_server, test_files_directory):
+        """Test complete directory conversion workflow"""
+        output_dir = tempfile.mkdtemp()
+        
+        try:
+            request = {
+                "jsonrpc": "2.0",
+                "id": 4,
+                "method": "tools/call", 
+                "params": {
+                    "name": "convert_directory",
+                    "arguments": {
+                        "input_directory": test_files_directory,
+                        "output_directory": output_dir
+                    }
+                }
+            }
+            
+            response = await mcp_server.handle_request_json(json.dumps(request))
+            response_data = json.loads(response)
+            
+            assert response_data["id"] == 4
+            assert "result" in response_data
+            
+            # Verify output directory structure
+            output_path = Path(output_dir)
+            assert output_path.exists()
+            
+            # Should have markdown files for each converted file
+            md_files = list(output_path.glob("*.md"))
+            assert len(md_files) > 0
+            
+        finally:
+            shutil.rmtree(output_dir)
+            
+    @pytest.mark.integration
+    async def test_concurrent_requests(self, mcp_server, test_files_directory):
+        """Test handling multiple concurrent requests"""
+        test_file = Path(test_files_directory) / "simple.txt"
+        
+        # Create multiple concurrent requests
+        async def make_request(request_id):
+            request = {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "method": "tools/call", 
+                "params": {
+                    "name": "convert_file",
+                    "arguments": {
+                        "file_path": str(test_file)
+                    }
+                }
+            }
+            
+            response = await mcp_server.handle_request_json(json.dumps(request))
+            return json.loads(response)
+        
+        # Run 5 concurrent requests
+        tasks = [make_request(i) for i in range(10, 15)]
+        responses = await asyncio.gather(*tasks)
+        
+        # All requests should succeed
+        for i, response in enumerate(responses):
+            assert response["id"] == i + 10
+            assert "result" in response
+            assert "Hello, World!" in response["result"]["content"][0]["text"]
+            
+    @pytest.mark.integration 
+    async def test_error_handling_integration(self, mcp_server):
+        """Test comprehensive error handling integration"""
+        # Test invalid JSON
+        invalid_json = '{"invalid": json}'
+        response = await mcp_server.handle_request_json(invalid_json)
+        response_data = json.loads(response)
+        
+        assert "error" in response_data
+        assert response_data["error"]["code"] == -32700  # Parse error
+        
+        # Test unknown method
+        unknown_method_request = {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "unknown/method",
+            "params": {}
+        }
+        
+        response = await mcp_server.handle_request_json(json.dumps(unknown_method_request))
+        response_data = json.loads(response)
+        
+        assert response_data["id"] == 5
+        assert "error" in response_data
+        assert response_data["error"]["code"] == -32601  # Method not found
+        
+        # Test invalid parameters
+        invalid_params_request = {
+            "jsonrpc": "2.0",
+            "id": 6,
+            "method": "tools/call",
+            "params": {
+                "name": "convert_file",
+                "arguments": {
+                    "invalid_parameter": "value"
+                }
+            }
+        }
+        
+        response = await mcp_server.handle_request_json(json.dumps(invalid_params_request))
+        response_data = json.loads(response)
+        
+        assert response_data["id"] == 6
+        assert "error" in response_data
+        assert response_data["error"]["code"] == -32602  # Invalid params
+        
+    @pytest.mark.integration
+    @pytest.mark.slow
+    async def test_large_file_handling(self, mcp_server):
+        """Test handling of large files"""
+        # Create a large text file (10MB)
+        large_content = "A" * (10 * 1024 * 1024)
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+            f.write(large_content)
+            large_file_path = f.name
+            
+        try:
+            request = {
+                "jsonrpc": "2.0",
+                "id": 7,
+                "method": "tools/call",
+                "params": {
+                    "name": "convert_file", 
+                    "arguments": {
+                        "file_path": large_file_path
+                    }
+                }
+            }
+            
+            start_time = time.time()
+            response = await mcp_server.handle_request_json(json.dumps(request))
+            end_time = time.time()
+            
+            response_data = json.loads(response)
+            
+            # Should complete within reasonable time (30 seconds)
+            assert end_time - start_time < 30
+            
+            # Should either succeed or fail gracefully
+            assert "result" in response_data or "error" in response_data
+            
+        finally:
+            Path(large_file_path).unlink()
+            
+    @pytest.mark.integration
+    async def test_memory_cleanup(self, mcp_server, test_files_directory):
+        """Test that memory is properly cleaned up after operations"""
+        import psutil
+        import os
+        
+        process = psutil.Process(os.getpid())
+        initial_memory = process.memory_info().rss
+        
+        # Perform multiple conversions
+        test_file = Path(test_files_directory) / "simple.txt"
+        for i in range(100):
+            request = {
+                "jsonrpc": "2.0",
+                "id": 100 + i,
+                "method": "tools/call",
+                "params": {
+                    "name": "convert_file",
+                    "arguments": {
+                        "file_path": str(test_file)
+                    }
+                }
+            }
+            
+            await mcp_server.handle_request_json(json.dumps(request))
+            
+        final_memory = process.memory_info().rss
+        memory_increase = final_memory - initial_memory
+        
+        # Memory increase should be reasonable (less than 100MB for 100 small files)
+        assert memory_increase < 100 * 1024 * 1024
+        
+    @pytest.mark.integration
+    async def test_supported_formats_integration(self, mcp_server):
+        """Test that all supported formats are properly listed"""
+        request = {
+            "jsonrpc": "2.0",
+            "id": 8,
+            "method": "tools/call",
+            "params": {
+                "name": "list_supported_formats",
+                "arguments": {}
+            }
+        }
+        
+        response = await mcp_server.handle_request_json(json.dumps(request))
+        response_data = json.loads(response)
+        
+        assert response_data["id"] == 8
+        assert "result" in response_data
+        
+        content = response_data["result"]["content"][0]["text"]
+        
+        # Should contain all major format categories
+        assert "Office Documents" in content
+        assert "PDF" in content or "pdf" in content
+        assert "Excel" in content or "xlsx" in content
+        assert "Images" in content
+        assert "Audio" in content
+        
+        # Should list specific extensions
+        common_extensions = [".pdf", ".docx", ".xlsx", ".png", ".jpg", ".mp3"]
+        for ext in common_extensions:
+            assert ext in content
+            
+    @pytest.mark.integration
+    async def test_graceful_shutdown(self, mcp_server):
+        """Test that server shuts down gracefully"""
+        # Start some background operations
+        test_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False)
+        test_file.write("Test content for shutdown test")
+        test_file.close()
+        
+        try:
+            # Start a conversion
+            request = {
+                "jsonrpc": "2.0", 
+                "id": 9,
+                "method": "tools/call",
+                "params": {
+                    "name": "convert_file",
+                    "arguments": {
+                        "file_path": test_file.name
+                    }
+                }
+            }
+            
+            # Should handle shutdown gracefully
+            response_task = asyncio.create_task(
+                mcp_server.handle_request_json(json.dumps(request))
+            )
+            
+            # Allow some processing time
+            await asyncio.sleep(0.1)
+            
+            # Server should be able to shutdown cleanly
+            # await mcp_server.shutdown()  # Implementation dependent
+            
+            # Ongoing requests should either complete or be cancelled gracefully
+            try:
+                response = await asyncio.wait_for(response_task, timeout=5.0)
+                # If completed, should be valid response
+                response_data = json.loads(response)
+                assert "result" in response_data or "error" in response_data
+            except asyncio.TimeoutError:
+                # If cancelled, that's also acceptable
+                response_task.cancel()
+                
+        finally:
+            Path(test_file.name).unlink()
+
+
+class TestMCPServerRealWorld:
+    """Real-world scenario integration tests"""
+    
+    @pytest.mark.integration
+    async def test_typical_user_workflow(self, mcp_server):
+        """Test a typical user workflow"""
+        # 1. User asks for supported formats
+        formats_request = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call", 
+            "params": {
+                "name": "list_supported_formats",
+                "arguments": {}
+            }
+        }
+        
+        response = await mcp_server.handle_request_json(json.dumps(formats_request))
+        assert json.loads(response)["id"] == 1
+        
+        # 2. User converts a single file
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+            f.write("User document content")
+            test_file_path = f.name
+            
+        try:
+            convert_request = {
+                "jsonrpc": "2.0",
+                "id": 2, 
+                "method": "tools/call",
+                "params": {
+                    "name": "convert_file",
+                    "arguments": {
+                        "file_path": test_file_path
+                    }
+                }
+            }
+            
+            response = await mcp_server.handle_request_json(json.dumps(convert_request))
+            response_data = json.loads(response)
+            
+            assert response_data["id"] == 2
+            assert "result" in response_data
+            assert "User document content" in response_data["result"]["content"][0]["text"]
+            
+        finally:
+            Path(test_file_path).unlink()
+            
+        # 3. User converts a directory
+        temp_dir = tempfile.mkdtemp()
+        output_dir = tempfile.mkdtemp()
+        
+        try:
+            # Create some files in the input directory
+            (Path(temp_dir) / "doc1.txt").write_text("Document 1")
+            (Path(temp_dir) / "doc2.txt").write_text("Document 2")
+            
+            directory_request = {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "tools/call",
+                "params": {
+                    "name": "convert_directory",
+                    "arguments": {
+                        "input_directory": temp_dir,
+                        "output_directory": output_dir
+                    }
+                }
+            }
+            
+            response = await mcp_server.handle_request_json(json.dumps(directory_request))
+            response_data = json.loads(response)
+            
+            assert response_data["id"] == 3
+            assert "result" in response_data
+            
+        finally:
+            shutil.rmtree(temp_dir)
+            shutil.rmtree(output_dir)
+
+
+if __name__ == "__main__":
+    pytest.main([__file__, "-v", "-s"])

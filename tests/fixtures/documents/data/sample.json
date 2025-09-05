@@ -1,0 +1,28 @@
+{
+  "name": "Sample JSON Document",
+  "version": "1.0",
+  "description": "This is a sample JSON file for testing purposes",
+  "features": [
+    "JSON parsing",
+    "Data structure validation",
+    "Unicode support"
+  ],
+  "metadata": {
+    "created": "2024-01-01T00:00:00Z",
+    "author": "Test Generator",
+    "tags": [
+      "test",
+      "sample",
+      "json"
+    ]
+  },
+  "numbers": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "boolean": true,
+  "null_value": null
+}

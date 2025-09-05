@@ -1,0 +1,371 @@
+"""
+Example test file for convert_file tool - Implementation Reference
+
+This file shows what the actual test implementation would look like.
+This is NOT the actual implementation, just a blueprint for development.
+"""
+
+import pytest
+import tempfile
+import base64
+from pathlib import Path
+from unittest.mock import Mock, patch, AsyncMock
+import json
+
+# These imports would be actual once implemented
+# from markitdown_mcp.server import MarkItDownMCPServer, MCPRequest, MCPResponse
+
+
+class TestConvertFileTool:
+    """Test suite for the convert_file MCP tool"""
+    
+    @pytest.fixture
+    def mcp_server(self):
+        """Create an MCP server instance for testing"""
+        # return MarkItDownMCPServer()
+        pass
+    
+    @pytest.fixture
+    def sample_pdf_path(self):
+        """Create a sample PDF file for testing"""
+        # Would create a real PDF file
+        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as f:
+            # Write minimal PDF content
+            f.write(b'%PDF-1.4 sample content')
+            return f.name
+    
+    @pytest.fixture
+    def sample_text_content(self):
+        """Sample text content for base64 testing"""
+        return "Hello, World! This is test content."
+    
+    @pytest.mark.unit
+    async def test_convert_file_with_valid_path(self, mcp_server, sample_pdf_path):
+        """Test convert_file tool with valid file path"""
+        request = MCPRequest(
+            id="test-1",
+            method="tools/call",
+            params={
+                "name": "convert_file",
+                "arguments": {
+                    "file_path": sample_pdf_path
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        assert response.id == "test-1"
+        assert response.result is not None
+        assert "content" in response.result
+        assert len(response.result["content"]) > 0
+        assert response.result["content"][0]["type"] == "text"
+        
+    @pytest.mark.unit
+    async def test_convert_file_with_base64_content(self, mcp_server, sample_text_content):
+        """Test convert_file tool with base64 encoded content"""
+        # Encode sample content
+        encoded_content = base64.b64encode(sample_text_content.encode()).decode()
+        
+        request = MCPRequest(
+            id="test-2", 
+            method="tools/call",
+            params={
+                "name": "convert_file",
+                "arguments": {
+                    "file_content": encoded_content,
+                    "filename": "test.txt"
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        assert response.id == "test-2"
+        assert response.result is not None
+        assert sample_text_content in response.result["content"][0]["text"]
+        
+    @pytest.mark.unit
+    async def test_convert_file_nonexistent_file(self, mcp_server):
+        """Test convert_file tool with non-existent file"""
+        request = MCPRequest(
+            id="test-3",
+            method="tools/call",
+            params={
+                "name": "convert_file", 
+                "arguments": {
+                    "file_path": "/nonexistent/file.pdf"
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        assert response.id == "test-3"
+        assert response.error is not None
+        assert response.error["code"] == -32602
+        assert "not found" in response.error["message"].lower()
+        
+    @pytest.mark.unit
+    async def test_convert_file_missing_arguments(self, mcp_server):
+        """Test convert_file tool with missing arguments"""
+        request = MCPRequest(
+            id="test-4",
+            method="tools/call", 
+            params={
+                "name": "convert_file",
+                "arguments": {}  # Missing required arguments
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        assert response.id == "test-4"
+        assert response.error is not None
+        assert response.error["code"] == -32602
+        
+    @pytest.mark.unit
+    async def test_convert_file_invalid_base64(self, mcp_server):
+        """Test convert_file tool with invalid base64 content"""
+        request = MCPRequest(
+            id="test-5",
+            method="tools/call",
+            params={
+                "name": "convert_file",
+                "arguments": {
+                    "file_content": "invalid-base64-content!@#",
+                    "filename": "test.txt"
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        assert response.id == "test-5"
+        assert response.error is not None
+        assert "base64" in response.error["message"].lower()
+        
+    @pytest.mark.unit
+    @pytest.mark.parametrize("file_extension,content", [
+        (".pdf", b"%PDF-1.4 test"),
+        (".docx", b"PK\x03\x04"),  # ZIP header for DOCX
+        (".txt", b"Plain text content"),
+        (".json", b'{"key": "value"}'),
+        (".csv", b"col1,col2\nval1,val2")
+    ])
+    async def test_convert_file_supported_formats(self, mcp_server, file_extension, content):
+        """Test convert_file tool with various supported file formats"""
+        with tempfile.NamedTemporaryFile(suffix=file_extension, delete=False) as f:
+            f.write(content)
+            f.flush()
+            
+            request = MCPRequest(
+                id=f"test-format-{file_extension}",
+                method="tools/call",
+                params={
+                    "name": "convert_file",
+                    "arguments": {
+                        "file_path": f.name
+                    }
+                }
+            )
+            
+            response = await mcp_server.handle_request(request)
+            
+            assert response.id == f"test-format-{file_extension}"
+            # Should succeed or fail gracefully, but not crash
+            assert response.result is not None or response.error is not None
+            
+    @pytest.mark.unit
+    @patch('markitdown_mcp.server.MarkItDown')
+    async def test_convert_file_markitdown_error(self, mock_markitdown, mcp_server, sample_pdf_path):
+        """Test convert_file tool when MarkItDown throws an exception"""
+        # Mock MarkItDown to raise an exception
+        mock_instance = mock_markitdown.return_value
+        mock_instance.convert.side_effect = Exception("MarkItDown conversion error")
+        
+        request = MCPRequest(
+            id="test-6",
+            method="tools/call",
+            params={
+                "name": "convert_file",
+                "arguments": {
+                    "file_path": sample_pdf_path
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        assert response.id == "test-6"
+        assert response.error is not None
+        assert response.error["code"] == -32603
+        assert "conversion error" in response.error["message"].lower()
+        
+    @pytest.mark.unit
+    async def test_convert_file_large_content_base64(self, mcp_server):
+        """Test convert_file tool with large base64 content"""
+        # Create large content (1MB)
+        large_content = "A" * 1024 * 1024
+        encoded_content = base64.b64encode(large_content.encode()).decode()
+        
+        request = MCPRequest(
+            id="test-large",
+            method="tools/call",
+            params={
+                "name": "convert_file",
+                "arguments": {
+                    "file_content": encoded_content,
+                    "filename": "large.txt"
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        assert response.id == "test-large"
+        # Should handle large content without crashing
+        assert response.result is not None or response.error is not None
+        
+    @pytest.mark.unit
+    async def test_convert_file_unicode_filename(self, mcp_server):
+        """Test convert_file tool with Unicode filename"""
+        content = "Test content with unicode filename"
+        encoded_content = base64.b64encode(content.encode()).decode()
+        
+        request = MCPRequest(
+            id="test-unicode",
+            method="tools/call", 
+            params={
+                "name": "convert_file",
+                "arguments": {
+                    "file_content": encoded_content,
+                    "filename": "测试文件名.txt"  # Chinese filename
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        assert response.id == "test-unicode"
+        assert response.result is not None
+        assert "测试文件名.txt" in response.result["content"][0]["text"]
+        
+    @pytest.mark.security  
+    async def test_convert_file_path_traversal_attempt(self, mcp_server):
+        """Test convert_file tool against path traversal attacks"""
+        malicious_paths = [
+            "../../../etc/passwd",
+            "..\\..\\..\\windows\\system32\\config\\sam",
+            "/etc/shadow",
+            "C:\\Windows\\System32\\config\\SAM"
+        ]
+        
+        for malicious_path in malicious_paths:
+            request = MCPRequest(
+                id=f"test-security-{hash(malicious_path)}",
+                method="tools/call",
+                params={
+                    "name": "convert_file",
+                    "arguments": {
+                        "file_path": malicious_path
+                    }
+                }
+            )
+            
+            response = await mcp_server.handle_request(request)
+            
+            # Should reject malicious paths
+            assert response.error is not None
+            assert response.error["code"] == -32602
+            
+    @pytest.mark.performance
+    async def test_convert_file_timeout_behavior(self, mcp_server):
+        """Test convert_file tool timeout behavior with slow conversion"""
+        # This would test timeout handling - implementation dependent
+        pass
+        
+    @pytest.mark.integration
+    async def test_convert_file_with_missing_dependencies(self, mcp_server):
+        """Test convert_file tool behavior when optional dependencies are missing"""
+        # This would test the graceful degradation when dependencies are missing
+        pass
+
+
+class TestConvertFileToolEdgeCases:
+    """Additional edge case tests for convert_file tool"""
+    
+    @pytest.mark.unit
+    async def test_empty_file(self, mcp_server):
+        """Test conversion of empty file"""
+        with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as f:
+            # Empty file
+            pass
+            
+        request = MCPRequest(
+            id="test-empty",
+            method="tools/call",
+            params={
+                "name": "convert_file",
+                "arguments": {
+                    "file_path": f.name
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        # Should handle empty files gracefully
+        assert response.result is not None or response.error is not None
+        
+    @pytest.mark.unit
+    async def test_binary_file_as_text(self, mcp_server):
+        """Test conversion of binary file incorrectly identified as text"""
+        with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as f:
+            # Write binary content
+            f.write(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR')
+            
+        request = MCPRequest(
+            id="test-binary",
+            method="tools/call", 
+            params={
+                "name": "convert_file",
+                "arguments": {
+                    "file_path": f.name
+                }
+            }
+        )
+        
+        response = await mcp_server.handle_request(request)
+        
+        # Should handle binary content gracefully
+        assert response.result is not None or response.error is not None
+
+
+# Performance and stress test examples
+class TestConvertFilePerformance:
+    """Performance tests for convert_file tool"""
+    
+    @pytest.mark.performance
+    @pytest.mark.slow
+    async def test_large_pdf_conversion(self, mcp_server):
+        """Test conversion of large PDF file"""
+        # Would test with a large PDF file (100+ pages)
+        pass
+        
+    @pytest.mark.performance  
+    async def test_concurrent_conversions(self, mcp_server):
+        """Test multiple concurrent file conversions"""
+        # Would test concurrent request handling
+        pass
+        
+    @pytest.mark.performance
+    async def test_memory_usage_large_files(self, mcp_server):
+        """Test memory usage with large files"""
+        # Would monitor memory usage during conversion
+        pass
+
+
+if __name__ == "__main__":
+    # Example of running tests
+    pytest.main([__file__, "-v"])
