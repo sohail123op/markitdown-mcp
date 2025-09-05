@@ -14,7 +14,7 @@ A powerful **Model Context Protocol (MCP) server** that converts 29+ file format
 
 - 🔌 **MCP Protocol**: Seamless integration with Claude Desktop and MCP clients
 - 📁 **29+ File Formats**: PDFs, Office docs, images, audio, archives, and more
-- 🔍 **OCR Support**: Extract text from images with EXIF metadata and OCR*
+- 🔍 **Image Metadata**: Extract EXIF metadata from images (JPG, PNG, GIF, etc.)
 - 🎵 **Speech Recognition**: Convert audio to text with speech transcription (MP3, WAV)*
 
 *_Requires `markitdown[all]` installation for full functionality_
@@ -26,7 +26,7 @@ A powerful **Model Context Protocol (MCP) server** that converts 29+ file format
 | **PDF** | `pypdf`, `pymupdf`, `pdfplumber` | `pipx inject markitdown-mcp 'markitdown[all]'` |
 | **Excel (.xlsx, .xls)** | `openpyxl`, `xlrd`, `pandas` | `pipx inject markitdown-mcp openpyxl xlrd pandas` |
 | **PowerPoint (.pptx)** | `python-pptx` | Included in base install |
-| **Images with OCR** | `pytesseract`, `PIL` | `pipx inject markitdown-mcp 'markitdown[all]'` |
+| **Images** | `PIL`, `exiftool` (optional) | Included in base install |
 | **Audio** | `pydub`, `speech_recognition` | `pipx inject markitdown-mcp 'markitdown[all]'` |
 | **Basic formats** | None | Base install only |
 
@@ -105,7 +105,7 @@ Convert all supported files in a directory.
 | Category | Extensions | Features |
 |----------|------------|----------|
 | **📊 Office** | `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.xls` | Full document structure |
-| **🖼️ Images** | `.jpg`, `.png`, `.gif`, `.bmp`, `.tiff`, `.webp` | OCR text extraction + EXIF metadata |
+| **🖼️ Images** | `.jpg`, `.png`, `.gif`, `.bmp`, `.tiff`, `.webp` | EXIF metadata extraction |
 | **🎵 Audio** | `.mp3`, `.wav` | Speech-to-text transcription |
 | **🌐 Web** | `.html`, `.htm`, `.xml`, `.json`, `.csv` | Clean formatting |
 | **📚 Books** | `.epub` | Chapter extraction |

@@ -1,5 +1,17 @@
 # Known Issues
 
+## No OCR Support for Images
+
+Despite some documentation suggesting OCR support, the MarkItDown library **does not perform OCR on images**. When converting image files (PNG, JPG, etc.), it only:
+- Extracts EXIF metadata (if available)
+- Can describe images using a multimodal LLM (if configured with an LLM client)
+
+**Current behavior**: Screenshots and images with text will convert to empty or metadata-only Markdown files.
+
+**Workaround**: If you need OCR functionality, you would need to:
+1. Use a separate OCR tool (like `tesseract`) to extract text first
+2. Or wait for OCR support to be added to the upstream MarkItDown library
+
 ## Unicode Errors with Markdown Files
 
 Some `.md` files may fail to convert with a `UnicodeDecodeError` when they contain non-ASCII characters. This is a known limitation in the MarkItDown library's `PlainTextConverter`, which uses ASCII encoding by default.
